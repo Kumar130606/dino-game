@@ -9,6 +9,7 @@ let dino = { x: 50, y: 180, width: 20, height: 20, color: '#666' };
 let obstacles = [];
 let gravity = 0.8, isJumping = false, jumpVelocity;
 let spawnChance = 0.02, score = 0;
+let touchStartY;
 
 window.onload = function () {
   board = document.getElementById('board');
@@ -17,6 +18,9 @@ window.onload = function () {
   board.height = 200;
 
   document.addEventListener('keydown', jump);
+  document.addEventListener('keydown', jump);
+  document.addEventListener('touchstart', handleTouchStart);
+  document.addEventListener('touchend', handleTouchEnd);
 
   requestAnimationFrame(animate);
 };
@@ -24,6 +28,20 @@ window.onload = function () {
 function animate() {
   update();
   requestAnimationFrame(animate);
+}
+
+function handleTouchStart(event) {
+  touchStartY = event.touches[0].clientY;
+}
+
+function handleTouchEnd(event) {
+  let touchEndY = event.changedTouches[0].clientY;
+  let touchDistance = touchEndY - touchStartY;
+
+  // Adjust this threshold based on your preference
+  if (touchDistance > 50) {
+    jump();
+  }
 }
 
 function update() {
